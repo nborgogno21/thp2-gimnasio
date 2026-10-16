@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "dev": "node --watch index.js"
   },
   "repository": {
     "type": "git",
@@ -19,6 +20,7 @@
   },
   "homepage": "https://github.com/nborgogno21/thp2-gimnasio#readme",
   "dependencies": {
+    "dotenv": "^18.0.8",
     "express": "^5.3.0",
     "zod": "^4.6.7"
   }
