@@ -1,0 +1,25 @@
+{
+  "name": "thp2-gimnasio",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nborgogno21/thp2-gimnasio.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/nborgogno21/thp2-gimnasio/issues"
+  },
+  "homepage": "https://github.com/nborgogno21/thp2-gimnasio#readme",
+  "dependencies": {
+    "express": "^5.3.0",
+    "zod": "^4.6.7"
+  }
+}
