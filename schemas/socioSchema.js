@@ -1,4 +1,4 @@
-const { z } = require("zod");
+import { z } from "zod";
 
 const socioSchema = z.object({
   nombre: z.string().min(1),
@@ -7,4 +7,4 @@ const socioSchema = z.object({
   plan: z.enum(["mensual", "trimestral", "anual"]),
 });
 
-module.exports = { socioSchema };
+export { socioSchema };
