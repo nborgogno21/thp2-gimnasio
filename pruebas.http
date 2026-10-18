@@ -1,0 +1,97 @@
+### S1. GET /api/socios - lista vacía, 200
+GET http://localhost:3000/api/socios
+
+### S2. POST /api/socios válido - 201, id 1
+POST http://localhost:3000/api/socios
+Content-Type: application/json
+
+{
+  "nombre": "Juan",
+  "dni": "12345678",
+  "email": "juan@mail.com",
+  "plan": "mensual"
+}
+
+### S3. POST /api/socios con el MISMO DNI - 409 DNI_DUPLICADO
+POST http://localhost:3000/api/socios
+Content-Type: application/json
+
+{
+  "nombre": "Otro Juan",
+  "dni": "12345678",
+  "email": "otro@mail.com",
+  "plan": "anual"
+}
+
+### S4. POST /api/socios con DNI inválido - 400 con details
+POST http://localhost:3000/api/socios
+Content-Type: application/json
+
+{
+  "nombre": "Ana",
+  "dni": "abc",
+  "email": "ana@mail.com",
+  "plan": "mensual"
+}
+
+### S5. POST /api/socios con plan inválido - 400
+POST http://localhost:3000/api/socios
+Content-Type: application/json
+
+{
+  "nombre": "Ana",
+  "dni": "87654321",
+  "email": "ana@mail.com",
+  "plan": "diario"
+}
+
+### S6. POST /api/socios segundo socio - 201, id 2
+POST http://localhost:3000/api/socios
+Content-Type: application/json
+
+{
+  "nombre": "Ana",
+  "dni": "87654321",
+  "email": "ana@mail.com",
+  "plan": "trimestral"
+}
+
+### S7. GET /api/socios/1 - detalle, 200
+GET http://localhost:3000/api/socios/1
+
+### S8. GET /api/socios/abc - 400 (id inválido)
+GET http://localhost:3000/api/socios/abc
+
+### S9. GET /api/socios/999 - 404 SOCIO_NO_ENCONTRADO
+GET http://localhost:3000/api/socios/999
+
+### S10. PUT /api/socios/1 - 200, plan cambiado a anual
+PUT http://localhost:3000/api/socios/1
+Content-Type: application/json
+
+{
+  "nombre": "Juan Perez",
+  "dni": "12345678",
+  "email": "juan@mail.com",
+  "plan": "anual"
+}
+
+### S11. PUT /api/socios/1 con el DNI del socio 2 - 409 DNI_DUPLICADO
+PUT http://localhost:3000/api/socios/1
+Content-Type: application/json
+
+{
+  "nombre": "Juan Perez",
+  "dni": "87654321",
+  "email": "juan@mail.com",
+  "plan": "anual"
+}
+
+### S12. DELETE /api/socios/2 - 204
+DELETE http://localhost:3000/api/socios/2
+
+### S13. GET /api/socios/2 - 404 (ya eliminado)
+GET http://localhost:3000/api/socios/2
+
+### S14. GET /cualquiera - 404 NOT_FOUND
+GET http://localhost:3000/cualquiera
