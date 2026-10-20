@@ -23,7 +23,7 @@ Content-Type: application/json
   "plan": "anual"
 }
 
-### S4. POST /api/socios con DNI inválido - 400 con details
+### S4. POST /api/socios con DNI inválido - 400 con detailss
 POST http://localhost:3000/api/socios
 Content-Type: application/json
 
@@ -95,3 +95,66 @@ GET http://localhost:3000/api/socios/2
 
 ### S14. GET /cualquiera - 404 NOT_FOUND
 GET http://localhost:3000/cualquiera
+
+### C1. GET /api/clases - lista vacía, 200
+GET http://localhost:3000/api/clases
+
+### C2. POST /api/clases válida - 201, id 1
+POST http://localhost:3000/api/clases
+Content-Type: application/json
+
+{
+  "nombre": "Spinning",
+  "instructor": "Laura",
+  "dia": "lunes",
+  "horario": "18:30",
+  "cupo": 15
+}
+
+### C3. POST /api/clases con horario inválido - 400
+POST http://localhost:3000/api/clases
+Content-Type: application/json
+
+{
+  "nombre": "Yoga",
+  "instructor": "Pablo",
+  "dia": "martes",
+  "horario": "25:99",
+  "cupo": 10
+}
+
+### C4. POST /api/clases con cupo negativo - 400
+POST http://localhost:3000/api/clases
+Content-Type: application/json
+
+{
+  "nombre": "Yoga",
+  "instructor": "Pablo",
+  "dia": "martes",
+  "horario": "10:00",
+  "cupo": -5
+}
+
+### C5. GET /api/clases/1 - detalle, 200
+GET http://localhost:3000/api/clases/1
+
+### C6. GET /api/clases/999 - 404 CLASE_NO_ENCONTRADA
+GET http://localhost:3000/api/clases/999
+
+### C7. PUT /api/clases/1 - 200, cupo cambiado a 20
+PUT http://localhost:3000/api/clases/1
+Content-Type: application/json
+
+{
+  "nombre": "Spinning",
+  "instructor": "Laura",
+  "dia": "lunes",
+  "horario": "18:30",
+  "cupo": 20
+}
+
+### C8. DELETE /api/clases/1 - 204
+DELETE http://localhost:3000/api/clases/1
+
+### C9. GET /api/clases/1 - 404 (ya eliminada)
+GET http://localhost:3000/api/clases/1
