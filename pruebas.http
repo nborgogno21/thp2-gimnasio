@@ -158,3 +158,109 @@ DELETE http://localhost:3000/api/clases/1
 
 ### C9. GET /api/clases/1 - 404 (ya eliminada)
 GET http://localhost:3000/api/clases/1
+
+### I1. POST /api/socios - 201, id 1
+POST http://localhost:3000/api/socios
+Content-Type: application/json
+
+{
+  "nombre": "Juan",
+  "dni": "11111111",
+  "email": "juan@mail.com",
+  "plan": "mensual"
+}
+
+### I2. POST /api/socios - 201, id 2
+POST http://localhost:3000/api/socios
+Content-Type: application/json
+
+{
+  "nombre": "Ana",
+  "dni": "22222222",
+  "email": "ana@mail.com",
+  "plan": "anual"
+}
+
+### I3. POST /api/clases con cupo 1 - 201, id 1
+POST http://localhost:3000/api/clases
+Content-Type: application/json
+
+{
+  "nombre": "Spinning",
+  "instructor": "Laura",
+  "dia": "lunes",
+  "horario": "18:30",
+  "cupo": 1
+}
+
+### I4. GET /api/inscripciones - lista vacía, 200
+GET http://localhost:3000/api/inscripciones
+
+### I5. POST /api/inscripciones - 201, id 1
+POST http://localhost:3000/api/inscripciones
+Content-Type: application/json
+
+{
+  "socioId": 1,
+  "claseId": 1
+}
+
+### I6. POST /api/inscripciones repetida - 409 YA_INSCRIPTO
+POST http://localhost:3000/api/inscripciones
+Content-Type: application/json
+
+{
+  "socioId": 1,
+  "claseId": 1
+}
+
+### I7. POST /api/inscripciones con la clase llena - 409 CUPO_COMPLETO
+POST http://localhost:3000/api/inscripciones
+Content-Type: application/json
+
+{
+  "socioId": 2,
+  "claseId": 1
+}
+
+### I8. POST /api/inscripciones con socio inexistente - 404 SOCIO_NO_ENCONTRADO
+POST http://localhost:3000/api/inscripciones
+Content-Type: application/json
+
+{
+  "socioId": 999,
+  "claseId": 1
+}
+
+### I9. POST /api/inscripciones con clase inexistente - 404 CLASE_NO_ENCONTRADA
+POST http://localhost:3000/api/inscripciones
+Content-Type: application/json
+
+{
+  "socioId": 1,
+  "claseId": 999
+}
+
+### I10. POST /api/inscripciones con datos inválidos - 400
+POST http://localhost:3000/api/inscripciones
+Content-Type: application/json
+
+{
+  "socioId": "abc",
+  "claseId": 1
+}
+
+### I11. GET /api/inscripciones/1 - detalle, 200
+GET http://localhost:3000/api/inscripciones/1
+
+### I12. DELETE /api/inscripciones/1 - 204
+DELETE http://localhost:3000/api/inscripciones/1
+
+### I13. POST /api/inscripciones del socio 2 - 201 (se liberó el cupo)
+POST http://localhost:3000/api/inscripciones
+Content-Type: application/json
+
+{
+  "socioId": 2,
+  "claseId": 1
+}
