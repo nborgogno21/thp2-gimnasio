@@ -5,32 +5,39 @@ import { inscripcionesMemoryDao } from "./memory/inscripcionesMemoryDao.js";
 
 function persistenciaInvalida() {
   return new Error(
-    `PERSISTENCE_TYPE inválido: "${config.persistenceType}". Usá "memory"`
+    `PERSISTENCE_TYPE inválido: "${config.persistenceType}". Usá "memory" o "sequelize"`
   );
 }
 
-export function getSociosDao() {
+export async function getSociosDao() {
   switch (config.persistenceType) {
     case "memory":
       return sociosMemoryDao;
+    case "sequelize":
+      return (await import("./sequelize/sociosSequelizeDao.js")).sociosSequelizeDao;
     default:
       throw persistenciaInvalida();
   }
 }
 
-export function getClasesDao() {
+export async function getClasesDao() {
   switch (config.persistenceType) {
     case "memory":
       return clasesMemoryDao;
+    case "sequelize":
+      return (await import("./sequelize/clasesSequelizeDao.js")).clasesSequelizeDao;
     default:
       throw persistenciaInvalida();
   }
 }
 
-export function getInscripcionesDao() {
+export async function getInscripcionesDao() {
   switch (config.persistenceType) {
     case "memory":
       return inscripcionesMemoryDao;
+    case "sequelize":
+      return (await import("./sequelize/inscripcionesSequelizeDao.js"))
+        .inscripcionesSequelizeDao;
     default:
       throw persistenciaInvalida();
   }

@@ -1,5 +1,5 @@
-import { sequelize } from "../connection/sequelize.js";
-import { ClaseModel } from "./models/index.js";
+import { sequelize } from "../../connection/sequelize.js";
+import { ClaseModel } from "../models/index.js";
 
 export const clasesSequelizeDao = {
   async init() {

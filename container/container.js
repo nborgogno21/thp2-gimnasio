@@ -11,9 +11,9 @@ import { makeClasesRouter } from "../routes/makeClasesRouter.js";
 import { makeInscripcionesRouter } from "../routes/makeInscripcionesRouter.js";
 
 export async function buildContainer() {
-  const sociosDao = getSociosDao();
-  const clasesDao = getClasesDao();
-  const inscripcionesDao = getInscripcionesDao();
+  const sociosDao = await getSociosDao();
+  const clasesDao = await getClasesDao();
+  const inscripcionesDao = await getInscripcionesDao();
   await sociosDao.init();
   await clasesDao.init();
   await inscripcionesDao.init();

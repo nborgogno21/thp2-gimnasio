@@ -1,5 +1,5 @@
-import { sequelize } from "../connection/sequelize.js";
-import { SocioModel } from "./models/index.js";
+import { sequelize } from "../../connection/sequelize.js";
+import { SocioModel } from "../models/index.js";
 
 export const sociosSequelizeDao = {
   async init() {
