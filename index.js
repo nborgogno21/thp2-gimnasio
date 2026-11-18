@@ -1,6 +1,7 @@
 import express from "express";
 import { config } from "./config/config.js";
 import { buildContainer } from "./container/container.js";
+import { swaggerRouter } from "./docs/swaggerRouter.js";
 import { notFound } from "./middlewares/notFound.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 
@@ -8,6 +9,7 @@ const app = express();
 app.use(express.json());
 
 app.use("/api", await buildContainer());
+app.use("/api-docs", swaggerRouter);
 
 app.use(notFound);
 app.use(errorHandler);

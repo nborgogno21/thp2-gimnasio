@@ -1,0 +1,108 @@
+openapi: 3.0.3
+info:
+  title: Gimnasio API
+  version: 1.0.0
+  description: API REST para gestionar socios, clases e inscripciones de un gimnasio.
+servers:
+  - url: /api
+tags:
+  - name: Socios
+  - name: Clases
+  - name: Inscripciones
+
+components:
+  parameters:
+    IdParam:
+      name: id
+      in: path
+      required: true
+      description: Id numérico del recurso
+      schema:
+        type: integer
+        minimum: 1
+      example: 1
+
+  schemas:
+    Socio:
+      type: object
+      properties:
+        id: { type: integer, example: 1 }
+        nombre: { type: string, example: Juan }
+        dni: { type: string, example: "12345678" }
+        email: { type: string, format: email, example: juan@mail.com }
+        plan: { type: string, enum: [mensual, trimestral, anual], example: mensual }
+    SocioInput:
+      type: object
+      required: [nombre, dni, email, plan]
+      properties:
+        nombre: { type: string, minLength: 1, example: Juan }
+        dni: { type: string, pattern: '^\d{7,8}$', example: "12345678" }
+        email: { type: string, format: email, example: juan@mail.com }
+        plan: { type: string, enum: [mensual, trimestral, anual], example: mensual }
+
+    Clase:
+      type: object
+      properties:
+        id: { type: integer, example: 1 }
+        nombre: { type: string, example: Spinning }
+        instructor: { type: string, example: Laura }
+        dia: { type: string, enum: [lunes, martes, miercoles, jueves, viernes, sabado], example: lunes }
+        horario: { type: string, example: "18:30" }
+        cupo: { type: integer, example: 15 }
+    ClaseInput:
+      type: object
+      required: [nombre, instructor, dia, horario, cupo]
+      properties:
+        nombre: { type: string, minLength: 1, example: Spinning }
+        instructor: { type: string, minLength: 1, example: Laura }
+        dia: { type: string, enum: [lunes, martes, miercoles, jueves, viernes, sabado], example: lunes }
+        horario: { type: string, pattern: '^([01]\d|2[0-3]):[0-5]\d$', example: "18:30" }
+        cupo: { type: integer, minimum: 1, example: 15 }
+
+    Inscripcion:
+      type: object
+      properties:
+        id: { type: integer, example: 1 }
+        socioId: { type: integer, example: 1 }
+        claseId: { type: integer, example: 1 }
+    InscripcionInput:
+      type: object
+      required: [socioId, claseId]
+      properties:
+        socioId: { type: integer, minimum: 1, example: 1 }
+        claseId: { type: integer, minimum: 1, example: 1 }
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code: { type: string, example: VALIDATION_ERROR }
+            message: { type: string, example: Datos inválidos }
+            details:
+              type: array
+              items:
+                type: object
+
+  responses:
+    BadRequest:
+      description: Datos inválidos (VALIDATION_ERROR)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    NotFound:
+      description: No encontrado (SOCIO_NO_ENCONTRADO, CLASE_NO_ENCONTRADA o INSCRIPCION_NO_ENCONTRADA)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    Conflict:
+      description: Conflicto con una regla de negocio (DNI_DUPLICADO, YA_INSCRIPTO o CUPO_COMPLETO)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+paths: {}
