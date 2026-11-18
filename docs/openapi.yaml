@@ -105,4 +105,93 @@ components:
           schema:
             $ref: "#/components/schemas/Error"
 
-paths: {}
+paths:
+  /socios:
+    get:
+      tags: [Socios]
+      summary: Listar socios
+      responses:
+        "200":
+          description: Lista de socios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Socio"
+    post:
+      tags: [Socios]
+      summary: Crear un socio
+      description: No se puede repetir el DNI de otro socio.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SocioInput"
+      responses:
+        "201":
+          description: Socio creado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Socio"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "409":
+          $ref: "#/components/responses/Conflict"
+
+  /socios/{id}:
+    get:
+      tags: [Socios]
+      summary: Obtener un socio por id
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Socio encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Socio"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    put:
+      tags: [Socios]
+      summary: Actualizar un socio
+      description: Se envían todos los campos. No se puede usar el DNI de otro socio.
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SocioInput"
+      responses:
+        "200":
+          description: Socio actualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Socio"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+    delete:
+      tags: [Socios]
+      summary: Eliminar un socio
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "204":
+          description: Socio eliminado
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
