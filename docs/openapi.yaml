@@ -195,3 +195,89 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "404":
           $ref: "#/components/responses/NotFound"
+
+  /clases:
+    get:
+      tags: [Clases]
+      summary: Listar clases
+      responses:
+        "200":
+          description: Lista de clases
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Clase"
+    post:
+      tags: [Clases]
+      summary: Crear una clase
+      description: El cupo es la cantidad máxima de socios que pueden inscribirse.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClaseInput"
+      responses:
+        "201":
+          description: Clase creada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Clase"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  /clases/{id}:
+    get:
+      tags: [Clases]
+      summary: Obtener una clase por id
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Clase encontrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Clase"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    put:
+      tags: [Clases]
+      summary: Actualizar una clase
+      description: Se envían todos los campos.
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClaseInput"
+      responses:
+        "200":
+          description: Clase actualizada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Clase"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags: [Clases]
+      summary: Eliminar una clase
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "204":
+          description: Clase eliminada
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
