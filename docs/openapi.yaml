@@ -281,3 +281,74 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "404":
           $ref: "#/components/responses/NotFound"
+
+  /inscripciones:
+    get:
+      tags: [Inscripciones]
+      summary: Listar inscripciones
+      responses:
+        "200":
+          description: Lista de inscripciones
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Inscripcion"
+    post:
+      tags: [Inscripciones]
+      summary: Inscribir un socio en una clase
+      description: >
+        El socio y la clase tienen que existir (404). No se puede inscribir dos veces
+        al mismo socio en la misma clase (409 YA_INSCRIPTO), ni cuando la clase llegó
+        a su cupo (409 CUPO_COMPLETO). Al crearse, se emite el evento inscripcion.creada.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InscripcionInput"
+      responses:
+        "201":
+          description: Inscripción creada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Inscripcion"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+
+  /inscripciones/{id}:
+    get:
+      tags: [Inscripciones]
+      summary: Obtener una inscripción por id
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Inscripción encontrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Inscripcion"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags: [Inscripciones]
+      summary: Eliminar una inscripción
+      description: Libera un lugar en el cupo de la clase.
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "204":
+          description: Inscripción eliminada
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
