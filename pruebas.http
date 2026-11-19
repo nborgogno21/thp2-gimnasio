@@ -264,3 +264,24 @@ Content-Type: application/json
   "socioId": 2,
   "claseId": 1
 }
+
+### I14. DELETE /api/socios/2 - 204 (borra también su inscripción)
+DELETE http://localhost:3000/api/socios/2
+
+### I15. GET /api/inscripciones - lista vacía, 200
+GET http://localhost:3000/api/inscripciones
+
+### I16. POST /api/inscripciones del socio 1 - 201 (la clase quedó libre)
+POST http://localhost:3000/api/inscripciones
+Content-Type: application/json
+
+{
+  "socioId": 1,
+  "claseId": 1
+}
+
+### I17. DELETE /api/clases/1 - 204 (borra también sus inscripciones)
+DELETE http://localhost:3000/api/clases/1
+
+### I18. GET /api/inscripciones - lista vacía, 200
+GET http://localhost:3000/api/inscripciones

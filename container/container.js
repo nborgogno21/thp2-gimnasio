@@ -1,5 +1,8 @@
 import { Router } from "express";
+import { EventEmitter } from "node:events";
 import { getSociosDao, getClasesDao, getInscripcionesDao } from "../dao/daoFactory.js";
+import { consoleNotifier } from "../notifiers/consoleNotifier.js";
+import { registerInscripcionListeners } from "../listeners/registerInscripcionListeners.js";
 import { makeSociosUseCases } from "../usecases/makeSociosUseCases.js";
 import { makeClasesUseCases } from "../usecases/makeClasesUseCases.js";
 import { makeInscripcionesUseCases } from "../usecases/makeInscripcionesUseCases.js";
@@ -18,12 +21,16 @@ export async function buildContainer() {
   await clasesDao.init();
   await inscripcionesDao.init();
 
+  const eventBus = new EventEmitter();
+  registerInscripcionListeners({ eventBus, notifier: consoleNotifier });
+
   const sociosUseCases = makeSociosUseCases({ sociosDao, inscripcionesDao });
   const clasesUseCases = makeClasesUseCases({ clasesDao, inscripcionesDao });
   const inscripcionesUseCases = makeInscripcionesUseCases({
     inscripcionesDao,
     sociosDao,
     clasesDao,
+    eventBus,
   });
 
   const sociosController = makeSociosController({ sociosUseCases });

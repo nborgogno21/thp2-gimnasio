@@ -1,6 +1,6 @@
 import { AppError } from "../errors/AppError.js";
 
-export function makeInscripcionesUseCases({ inscripcionesDao, sociosDao, clasesDao }) {
+export function makeInscripcionesUseCases({ inscripcionesDao, sociosDao, clasesDao, eventBus }) {
   const obtener = async (id) => {
     const inscripcion = await inscripcionesDao.getById(id);
     if (!inscripcion) {
@@ -35,7 +35,9 @@ export function makeInscripcionesUseCases({ inscripcionesDao, sociosDao, clasesD
         throw new AppError(409, "CUPO_COMPLETO", "La clase no tiene cupo disponible");
       }
 
-      return inscripcionesDao.save({ socioId, claseId });
+      const inscripcion = await inscripcionesDao.save({ socioId, claseId });
+      eventBus.emit("inscripcion.creada", inscripcion);
+      return inscripcion;
     },
 
     async eliminar(id) {
