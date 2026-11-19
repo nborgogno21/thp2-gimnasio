@@ -36,4 +36,12 @@ export const inscripcionesMemoryDao = {
     inscripciones.splice(index, 1);
     return true;
   },
+
+  async deleteBySocio(socioId) {
+    inscripciones = inscripciones.filter((i) => i.socioId !== socioId);
+  },
+
+  async deleteByClase(claseId) {
+    inscripciones = inscripciones.filter((i) => i.claseId !== claseId);
+  },
 };

@@ -34,4 +34,12 @@ export const inscripcionesSequelizeDao = {
     const eliminados = await InscripcionModel.destroy({ where: { id } });
     return eliminados > 0;
   },
+
+  async deleteBySocio(socioId) {
+    await InscripcionModel.destroy({ where: { socioId } });
+  },
+
+  async deleteByClase(claseId) {
+    await InscripcionModel.destroy({ where: { claseId } });
+  },
 };
