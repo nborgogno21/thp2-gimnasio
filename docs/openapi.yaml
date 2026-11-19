@@ -92,18 +92,33 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/Error"
+          example:
+            error:
+              code: VALIDATION_ERROR
+              message: Datos inválidos
+              details:
+                - path: [dni]
+                  message: El DNI debe tener 7 u 8 dígitos
     NotFound:
       description: No encontrado (SOCIO_NO_ENCONTRADO, CLASE_NO_ENCONTRADA o INSCRIPCION_NO_ENCONTRADA)
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/Error"
+          example:
+            error:
+              code: SOCIO_NO_ENCONTRADO
+              message: Socio no encontrado
     Conflict:
       description: Conflicto con una regla de negocio (DNI_DUPLICADO, YA_INSCRIPTO o CUPO_COMPLETO)
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/Error"
+          example:
+            error:
+              code: DNI_DUPLICADO
+              message: Ya existe un socio con ese DNI
 
 paths:
   /socios:
