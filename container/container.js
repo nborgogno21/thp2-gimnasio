@@ -18,8 +18,8 @@ export async function buildContainer() {
   await clasesDao.init();
   await inscripcionesDao.init();
 
-  const sociosUseCases = makeSociosUseCases({ sociosDao });
-  const clasesUseCases = makeClasesUseCases({ clasesDao });
+  const sociosUseCases = makeSociosUseCases({ sociosDao, inscripcionesDao });
+  const clasesUseCases = makeClasesUseCases({ clasesDao, inscripcionesDao });
   const inscripcionesUseCases = makeInscripcionesUseCases({
     inscripcionesDao,
     sociosDao,

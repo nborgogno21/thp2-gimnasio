@@ -1,6 +1,6 @@
 import { AppError } from "../errors/AppError.js";
 
-export function makeSociosUseCases({ sociosDao }) {
+export function makeSociosUseCases({ sociosDao, inscripcionesDao }) {
   const obtener = async (id) => {
     const socio = await sociosDao.getById(id);
     if (!socio) {
@@ -34,6 +34,7 @@ export function makeSociosUseCases({ sociosDao }) {
 
     async eliminar(id) {
       await obtener(id);
+      await inscripcionesDao.deleteBySocio(id);
       await sociosDao.delete(id);
     },
   };

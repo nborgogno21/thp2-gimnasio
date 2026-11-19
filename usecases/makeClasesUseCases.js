@@ -1,6 +1,6 @@
 import { AppError } from "../errors/AppError.js";
 
-export function makeClasesUseCases({ clasesDao }) {
+export function makeClasesUseCases({ clasesDao, inscripcionesDao }) {
   const obtener = async (id) => {
     const clase = await clasesDao.getById(id);
     if (!clase) {
@@ -23,6 +23,7 @@ export function makeClasesUseCases({ clasesDao }) {
 
     async eliminar(id) {
       await obtener(id);
+      await inscripcionesDao.deleteByClase(id);
       await clasesDao.delete(id);
     },
   };
