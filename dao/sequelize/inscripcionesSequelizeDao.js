@@ -1,4 +1,4 @@
-import { sequelize } from "../../connection/sequelize.js";
+import { sequelize } from "../../config/database.js";
 import { InscripcionModel } from "../models/index.js";
 
 export const inscripcionesSequelizeDao = {

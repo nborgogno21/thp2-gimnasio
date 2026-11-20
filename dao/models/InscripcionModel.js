@@ -1,5 +1,5 @@
 import { DataTypes, Model } from "sequelize";
-import { sequelize } from "../../connection/sequelize.js";
+import { sequelize } from "../../config/database.js";
 
 export class InscripcionModel extends Model {}
 
