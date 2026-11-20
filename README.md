@@ -65,7 +65,7 @@ ruta → validación (Zod) → controlador → caso de uso → DAO → datos
 - `usecases/`: tiene las reglas de negocio.
 - `dao/`: guarda y busca los datos. Hay una versión en memoria (`memory/`) y otra con Sequelize (`sequelize/`), con los mismos métodos.
 - `container/`: crea todo y conecta las piezas entre sí.
-- `schemas/`, `middlewares/`, `errors/`, `config/` y `connection/`: validaciones, manejo de errores, configuración y conexión a la base.
+- `schemas/`, `middlewares/`, `errors/` y `config/`: validaciones, manejo de errores, configuración y conexión a la base (`config/database.js`).
 - `listeners/` y `notifiers/`: el evento y su notificación.
 - `docs/`: la documentación de Swagger.
 
