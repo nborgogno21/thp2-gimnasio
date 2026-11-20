@@ -87,3 +87,17 @@ El archivo `pruebas.http` tiene pruebas de todos los endpoints y de los errores 
 - `container/`: arma las dependencias y entrega el router principal.
 - `notifiers/` y `listeners/`: notificador y listener del evento.
 - `docs/`: documentación OpenAPI y Swagger UI.
+
+## Tecnologías
+
+Node.js (ES Modules), Express, Zod, Sequelize, SQLite, Swagger UI (OpenAPI 3).
+
+## Cómo viaja un pedido
+
+Ruta → validate (Zod) → Controlador → Caso de uso → DAO → datos
+
+- **Ruta:** decide qué función atiende cada URL.
+- **validate:** revisa con Zod que los datos sean correctos (si no, 400).
+- **Controlador:** arma la respuesta HTTP.
+- **Caso de uso:** aplica las reglas de negocio.
+- **DAO:** lee y escribe los datos, en memoria o en SQLite.
