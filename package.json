@@ -20,8 +20,10 @@
   },
   "homepage": "https://github.com/nborgogno21/thp2-gimnasio#readme",
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "dotenv": "^18.0.8",
     "express": "^5.3.0",
+    "jsonwebtoken": "^9.0.3",
     "sequelize": "^6.37.8",
     "sqlite3": "^6.0.1",
     "swagger-ui-express": "^5.0.1",
