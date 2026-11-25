@@ -1,7 +1,35 @@
-### S1. GET /api/socios - lista vacía, 200
-GET http://localhost:3000/api/socios
+@token = {{login.response.body.token}}
 
-### S2. POST /api/socios válido - 201, id 1
+# Los POST, PUT y DELETE necesitan el token que trae A1.
+
+### A1. POST /api/auth/login - 200. Inicia sesión con el usuario admin y devuelve el token
+# @name login
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "usuario": "admin",
+  "password": "admin1234"
+}
+
+### A2. POST /api/auth/login con contraseña incorrecta - 401. Rechaza el login con CREDENCIALES_INVALIDAS
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "usuario": "admin",
+  "password": "incorrecta"
+}
+
+### A3. POST /api/auth/login sin contraseña - 400. Falta la contraseña y Zod rechaza el pedido (VALIDATION_ERROR)
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "usuario": "admin"
+}
+
+### A4. POST /api/socios sin token - 401. Sin token no se puede crear, responde TOKEN_REQUERIDO
 POST http://localhost:3000/api/socios
 Content-Type: application/json
 
@@ -12,9 +40,37 @@ Content-Type: application/json
   "plan": "mensual"
 }
 
-### S3. POST /api/socios con el MISMO DNI - 409 DNI_DUPLICADO
+### A5. POST /api/socios con token falso - 401. Un token inventado es rechazado con TOKEN_INVALIDO
 POST http://localhost:3000/api/socios
 Content-Type: application/json
+Authorization: Bearer token-falso
+
+{
+  "nombre": "Juan",
+  "dni": "12345678",
+  "email": "juan@mail.com",
+  "plan": "mensual"
+}
+
+### S1. GET /api/socios - 200. Devuelve la lista de socios, todavía vacía
+GET http://localhost:3000/api/socios
+
+### S2. POST /api/socios - 201. Crea a Juan y devuelve el socio con id 1
+POST http://localhost:3000/api/socios
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nombre": "Juan",
+  "dni": "12345678",
+  "email": "juan@mail.com",
+  "plan": "mensual"
+}
+
+### S3. POST /api/socios con el mismo DNI - 409. Rechaza el alta porque el DNI ya existe (DNI_DUPLICADO)
+POST http://localhost:3000/api/socios
+Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "nombre": "Otro Juan",
@@ -23,9 +79,10 @@ Content-Type: application/json
   "plan": "anual"
 }
 
-### S4. POST /api/socios con DNI inválido - 400 con detailss
+### S4. POST /api/socios con DNI inválido - 400. El DNI no tiene 7 u 8 números y Zod lo rechaza (VALIDATION_ERROR)
 POST http://localhost:3000/api/socios
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "nombre": "Ana",
@@ -34,9 +91,10 @@ Content-Type: application/json
   "plan": "mensual"
 }
 
-### S5. POST /api/socios con plan inválido - 400
+### S5. POST /api/socios con plan inválido - 400. El plan no es mensual, trimestral ni anual (VALIDATION_ERROR)
 POST http://localhost:3000/api/socios
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "nombre": "Ana",
@@ -45,9 +103,10 @@ Content-Type: application/json
   "plan": "diario"
 }
 
-### S6. POST /api/socios segundo socio - 201, id 2
+### S6. POST /api/socios - 201. Crea a Ana y devuelve el socio con id 2
 POST http://localhost:3000/api/socios
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "nombre": "Ana",
@@ -56,18 +115,22 @@ Content-Type: application/json
   "plan": "trimestral"
 }
 
-### S7. GET /api/socios/1 - detalle, 200
+### S7. GET /api/socios - 200. Devuelve una lista con los dos socios, Juan y Ana
+GET http://localhost:3000/api/socios
+
+### S8. GET /api/socios/1 - 200. Devuelve los datos del socio con id 1
 GET http://localhost:3000/api/socios/1
 
-### S8. GET /api/socios/abc - 400 (id inválido)
+### S9. GET /api/socios/abc - 400. El id de la URL no es un número (VALIDATION_ERROR)
 GET http://localhost:3000/api/socios/abc
 
-### S9. GET /api/socios/999 - 404 SOCIO_NO_ENCONTRADO
+### S10. GET /api/socios/999 - 404. No existe un socio con ese id (SOCIO_NO_ENCONTRADO)
 GET http://localhost:3000/api/socios/999
 
-### S10. PUT /api/socios/1 - 200, plan cambiado a anual
+### S11. PUT /api/socios/1 - 200. Modifica al socio 1 y cambia su plan a anual
 PUT http://localhost:3000/api/socios/1
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "nombre": "Juan Perez",
@@ -76,9 +139,10 @@ Content-Type: application/json
   "plan": "anual"
 }
 
-### S11. PUT /api/socios/1 con el DNI del socio 2 - 409 DNI_DUPLICADO
+### S12. PUT /api/socios/1 con el DNI del socio 2 - 409. No deja usar el DNI de otro socio (DNI_DUPLICADO)
 PUT http://localhost:3000/api/socios/1
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "nombre": "Juan Perez",
@@ -87,103 +151,13 @@ Content-Type: application/json
   "plan": "anual"
 }
 
-### S12. DELETE /api/socios/2 - 204
-DELETE http://localhost:3000/api/socios/2
-
-### S13. GET /api/socios/2 - 404 (ya eliminado)
-GET http://localhost:3000/api/socios/2
-
-### S14. GET /cualquiera - 404 NOT_FOUND
-GET http://localhost:3000/cualquiera
-
-### C1. GET /api/clases - lista vacía, 200
+### C1. GET /api/clases - 200. Devuelve la lista de clases, todavía vacía
 GET http://localhost:3000/api/clases
 
-### C2. POST /api/clases válida - 201, id 1
+### C2. POST /api/clases - 201. Crea la clase Spinning con id 1 y un cupo de 1 lugar
 POST http://localhost:3000/api/clases
 Content-Type: application/json
-
-{
-  "nombre": "Spinning",
-  "instructor": "Laura",
-  "dia": "lunes",
-  "horario": "18:30",
-  "cupo": 15
-}
-
-### C3. POST /api/clases con horario inválido - 400
-POST http://localhost:3000/api/clases
-Content-Type: application/json
-
-{
-  "nombre": "Yoga",
-  "instructor": "Pablo",
-  "dia": "martes",
-  "horario": "25:99",
-  "cupo": 10
-}
-
-### C4. POST /api/clases con cupo negativo - 400
-POST http://localhost:3000/api/clases
-Content-Type: application/json
-
-{
-  "nombre": "Yoga",
-  "instructor": "Pablo",
-  "dia": "martes",
-  "horario": "10:00",
-  "cupo": -5
-}
-
-### C5. GET /api/clases/1 - detalle, 200
-GET http://localhost:3000/api/clases/1
-
-### C6. GET /api/clases/999 - 404 CLASE_NO_ENCONTRADA
-GET http://localhost:3000/api/clases/999
-
-### C7. PUT /api/clases/1 - 200, cupo cambiado a 20
-PUT http://localhost:3000/api/clases/1
-Content-Type: application/json
-
-{
-  "nombre": "Spinning",
-  "instructor": "Laura",
-  "dia": "lunes",
-  "horario": "18:30",
-  "cupo": 20
-}
-
-### C8. DELETE /api/clases/1 - 204
-DELETE http://localhost:3000/api/clases/1
-
-### C9. GET /api/clases/1 - 404 (ya eliminada)
-GET http://localhost:3000/api/clases/1
-
-### I1. POST /api/socios - 201, id 1
-POST http://localhost:3000/api/socios
-Content-Type: application/json
-
-{
-  "nombre": "Juan",
-  "dni": "11111111",
-  "email": "juan@mail.com",
-  "plan": "mensual"
-}
-
-### I2. POST /api/socios - 201, id 2
-POST http://localhost:3000/api/socios
-Content-Type: application/json
-
-{
-  "nombre": "Ana",
-  "dni": "22222222",
-  "email": "ana@mail.com",
-  "plan": "anual"
-}
-
-### I3. POST /api/clases con cupo 1 - 201, id 1
-POST http://localhost:3000/api/clases
-Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "nombre": "Spinning",
@@ -193,95 +167,164 @@ Content-Type: application/json
   "cupo": 1
 }
 
-### I4. GET /api/inscripciones - lista vacía, 200
+### C3. POST /api/clases con horario inválido - 400. El horario 25:99 no existe (VALIDATION_ERROR)
+POST http://localhost:3000/api/clases
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nombre": "Yoga",
+  "instructor": "Pablo",
+  "dia": "martes",
+  "horario": "25:99",
+  "cupo": 10
+}
+
+### C4. POST /api/clases con cupo negativo - 400. El cupo tiene que ser mayor a 0 (VALIDATION_ERROR)
+POST http://localhost:3000/api/clases
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nombre": "Yoga",
+  "instructor": "Pablo",
+  "dia": "martes",
+  "horario": "10:00",
+  "cupo": -5
+}
+
+### C5. GET /api/clases/1 - 200. Devuelve los datos de la clase con id 1
+GET http://localhost:3000/api/clases/1
+
+### C6. GET /api/clases/999 - 404. No existe una clase con ese id (CLASE_NO_ENCONTRADA)
+GET http://localhost:3000/api/clases/999
+
+### C7. PUT /api/clases/1 - 200. Modifica la clase 1 y cambia el horario a las 19:00
+PUT http://localhost:3000/api/clases/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nombre": "Spinning",
+  "instructor": "Laura",
+  "dia": "lunes",
+  "horario": "19:00",
+  "cupo": 1
+}
+
+### I1. GET /api/inscripciones - 200. Devuelve la lista de inscripciones, todavía vacía
 GET http://localhost:3000/api/inscripciones
 
-### I5. POST /api/inscripciones - 201, id 1
+### I2. POST /api/inscripciones - 201. Inscribe al socio 1 en la clase 1 y dispara el evento (aviso en la consola)
 POST http://localhost:3000/api/inscripciones
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "socioId": 1,
   "claseId": 1
 }
 
-### I6. POST /api/inscripciones repetida - 409 YA_INSCRIPTO
+### I3. POST /api/inscripciones repetida - 409. El socio 1 ya está anotado en esa clase (YA_INSCRIPTO)
 POST http://localhost:3000/api/inscripciones
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "socioId": 1,
   "claseId": 1
 }
 
-### I7. POST /api/inscripciones con la clase llena - 409 CUPO_COMPLETO
+### I4. POST /api/inscripciones con la clase llena - 409. El socio 2 no entra porque el único lugar ya está ocupado (CUPO_COMPLETO)
 POST http://localhost:3000/api/inscripciones
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "socioId": 2,
   "claseId": 1
 }
 
-### I8. POST /api/inscripciones con socio inexistente - 404 SOCIO_NO_ENCONTRADO
+### I5. POST /api/inscripciones con socio inexistente - 404. El socio 999 no existe (SOCIO_NO_ENCONTRADO)
 POST http://localhost:3000/api/inscripciones
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "socioId": 999,
   "claseId": 1
 }
 
-### I9. POST /api/inscripciones con clase inexistente - 404 CLASE_NO_ENCONTRADA
+### I6. POST /api/inscripciones con clase inexistente - 404. La clase 999 no existe (CLASE_NO_ENCONTRADA)
 POST http://localhost:3000/api/inscripciones
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "socioId": 1,
   "claseId": 999
 }
 
-### I10. POST /api/inscripciones con datos inválidos - 400
+### I7. POST /api/inscripciones con datos inválidos - 400. El socioId no es un número (VALIDATION_ERROR)
 POST http://localhost:3000/api/inscripciones
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "socioId": "abc",
   "claseId": 1
 }
 
-### I11. GET /api/inscripciones/1 - detalle, 200
+### I8. GET /api/inscripciones/1 - 200. Devuelve los datos de la inscripción con id 1
 GET http://localhost:3000/api/inscripciones/1
 
-### I12. DELETE /api/inscripciones/1 - 204
+### I9. DELETE /api/inscripciones/1 - 204. Borra la inscripción y se libera el lugar de la clase
 DELETE http://localhost:3000/api/inscripciones/1
+Authorization: Bearer {{token}}
 
-### I13. POST /api/inscripciones del socio 2 - 201 (se liberó el cupo)
+### I10. POST /api/inscripciones del socio 2 - 201. Ahora sí entra porque el lugar quedó libre, y dispara el evento
 POST http://localhost:3000/api/inscripciones
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "socioId": 2,
   "claseId": 1
 }
 
-### I14. DELETE /api/socios/2 - 204 (borra también su inscripción)
+### D1. DELETE /api/socios/2 - 204. Borra al socio 2 y también su inscripción (borrado en cascada)
 DELETE http://localhost:3000/api/socios/2
+Authorization: Bearer {{token}}
 
-### I15. GET /api/inscripciones - lista vacía, 200
+### D2. GET /api/inscripciones - 200. La lista quedó vacía, se borró la inscripción del socio 2
 GET http://localhost:3000/api/inscripciones
 
-### I16. POST /api/inscripciones del socio 1 - 201 (la clase quedó libre)
+### D3. POST /api/inscripciones del socio 1 - 201. La clase quedó libre y el socio 1 se anota de nuevo
 POST http://localhost:3000/api/inscripciones
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "socioId": 1,
   "claseId": 1
 }
 
-### I17. DELETE /api/clases/1 - 204 (borra también sus inscripciones)
+### D4. DELETE /api/clases/1 - 204. Borra la clase 1 y también sus inscripciones (borrado en cascada)
 DELETE http://localhost:3000/api/clases/1
+Authorization: Bearer {{token}}
 
-### I18. GET /api/inscripciones - lista vacía, 200
+### D5. GET /api/inscripciones - 200. La lista quedó vacía otra vez
 GET http://localhost:3000/api/inscripciones
+
+### D6. GET /api/socios/2 - 404. El socio 2 ya no existe (SOCIO_NO_ENCONTRADO)
+GET http://localhost:3000/api/socios/2
+
+### D7. GET /api/clases/1 - 404. La clase 1 ya no existe (CLASE_NO_ENCONTRADA)
+GET http://localhost:3000/api/clases/1
+
+### E1. DELETE /api/socios/999 - 404. No se puede borrar un socio que no existe (SOCIO_NO_ENCONTRADO)
+DELETE http://localhost:3000/api/socios/999
+Authorization: Bearer {{token}}
+
+### E2. GET /cualquiera - 404. Una ruta que no existe responde NOT_FOUND
+GET http://localhost:3000/cualquiera
